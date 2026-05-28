@@ -1,0 +1,8 @@
+.DS_Store
+.claude/
+arxiv.pdf
+KDD-web.png
+__pycache__/
+*.pyc
+.venv/
+node_modules/

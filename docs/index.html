@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Towards Event-Aware Forecasting in DeFi: Insights from On-chain Automated Market Maker Protocols"
+    />
+    <title>Deep-AMM-Events</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css"
+    />
+
+    <style>
+      body {
+        font-family: "Noto Sans", sans-serif;
+      }
+
+      .publication-title,
+      .publication-authors,
+      .publication-links,
+      .section-title {
+        font-family: "Google Sans", sans-serif;
+      }
+
+      .publication-title {
+        line-height: 1.14;
+      }
+
+      .publication-authors a,
+      .lab-source a {
+        color: hsl(204, 86%, 53%);
+      }
+
+      .publication-authors a:hover,
+      .lab-source a:hover {
+        text-decoration: underline;
+      }
+
+      .author-block {
+        display: inline-block;
+      }
+
+      .venue-line {
+        color: #b8860b;
+        font-weight: 700;
+      }
+
+      .title-highlight {
+        color: #b8860b;
+        font-style: italic;
+        font-weight: 700;
+      }
+
+      .teaser .hero-body {
+        padding-top: 0.15rem;
+        padding-bottom: 1.5rem;
+      }
+
+      .teaser .image-wrap {
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .teaser img {
+        display: block;
+        width: 100%;
+        height: auto;
+        margin: 0 auto;
+        border-radius: 6px;
+      }
+
+      .publication-links .button {
+        margin: 0.25rem 0.25rem;
+      }
+
+      .result-card {
+        height: 100%;
+        border: 1px solid #e8e8e8;
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow: 0 6px 18px rgba(10, 10, 10, 0.06);
+      }
+
+      .result-card .card-content {
+        padding: 1.1rem;
+      }
+
+      .result-card h3 {
+        margin-bottom: 0.4rem;
+      }
+
+      .result-note {
+        color: #666666;
+        font-size: 0.95rem;
+        margin-bottom: 0.8rem;
+      }
+
+      .table-wrapper {
+        overflow-x: auto;
+      }
+
+      .table-wrapper table {
+        min-width: 640px;
+      }
+
+      .table th,
+      .table td {
+        font-size: 0.93rem;
+        vertical-align: middle;
+      }
+
+      .table thead th {
+        white-space: nowrap;
+      }
+
+      .findings-box {
+        margin-top: 1.25rem;
+        padding: 1.2rem 1.3rem;
+        border-radius: 12px;
+        background: #f6f7f9;
+      }
+
+      .section-soft {
+        background: #fafafa;
+      }
+
+      .figure-copy h3 {
+        margin-bottom: 0.55rem;
+        text-align: left;
+        line-height: 1.16;
+      }
+
+      .figure-copy p:last-child {
+        margin-bottom: 0;
+      }
+
+      .section-intro {
+        margin-bottom: 1.5rem;
+      }
+
+      .section-intro p:last-child {
+        margin-bottom: 0;
+      }
+
+      .figure-visual img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 6px;
+      }
+
+      .figure-copy {
+        padding: 0.35rem 0 0.35rem 1rem;
+      }
+
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0 0.5rem;
+      }
+
+      .stat-card {
+        border: 1px solid #e8e8e8;
+        border-radius: 12px;
+        background: #ffffff;
+        padding: 1rem 1.1rem;
+        box-shadow: 0 6px 18px rgba(10, 10, 10, 0.05);
+      }
+
+      .stat-value {
+        font-family: "Google Sans", sans-serif;
+        font-size: 1.55rem;
+        font-weight: 700;
+        color: #b8860b;
+        line-height: 1.1;
+      }
+
+      .stat-label {
+        font-size: 0.92rem;
+        color: #444;
+        margin-top: 0.25rem;
+      }
+
+      .protocol-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 1.25rem;
+      }
+
+      .protocol-card {
+        border: 1px solid #e8e8e8;
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+        background: #ffffff;
+      }
+
+      .protocol-card h4 {
+        margin-bottom: 0.25rem;
+        font-family: "Google Sans", sans-serif;
+        color: #1f2937;
+      }
+
+      .protocol-card .pcat {
+        font-size: 0.85rem;
+        color: #b8860b;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+      }
+
+      .protocol-card p {
+        margin: 0;
+        font-size: 0.92rem;
+        color: #444;
+      }
+
+      .bibtex-section pre {
+        border-radius: 10px;
+        background: #f5f5f5;
+        padding: 1rem 1.2rem;
+        overflow-x: auto;
+      }
+
+      .lab-source {
+        margin-top: 0.6rem;
+      }
+
+      .delta-pos {
+        color: #c0392b;
+        font-weight: 700;
+      }
+
+      .delta-neg {
+        color: #16794a;
+        font-weight: 600;
+      }
+
+      @media (max-width: 768px) {
+        .publication-title {
+          font-size: 2rem !important;
+        }
+
+        .figure-copy {
+          padding-left: 0;
+        }
+
+        .stat-grid,
+        .protocol-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container is-max-desktop">
+          <div class="columns is-centered">
+            <div class="column has-text-centered">
+              <h1 class="title is-2 publication-title">
+                Towards Event-Aware Forecasting in DeFi: Insights
+                <br />
+                from On-chain
+                <span class="title-highlight">Automated Market Maker</span>
+                Protocols
+              </h1>
+
+              <div class="is-size-5 publication-authors">
+                <span class="author-block venue-line">KDD 2026 (Poster)</span>
+              </div>
+
+              <div class="is-size-5 publication-authors mt-4">
+                <span class="author-block">
+                  <!-- TODO: fill scholar URL for Huaiyu Jia -->
+                  <a href="https://scholar.google.com/citations?hl=zh-CN&user=cQ4Tak0AAAAJ" target="_blank" rel="noreferrer">Huaiyu Jia</a><sup>1,*</sup>,
+                </span>
+                <span class="author-block">
+                  <!-- TODO: fill scholar URL for Jiehshun You -->
+                  <a href="https://scholar.google.com/citations?hl=zh-CN&user=N2OEl6EAAAAJ" target="_blank" rel="noreferrer">Jiehshun You</a><sup>2,*</sup>,
+                </span>
+                <span class="author-block">
+                  <!-- TODO: fill scholar URL for Jingyu Liu -->
+                  <a href="https://www.google.com/" target="_blank" rel="noreferrer">Jingyu Liu</a><sup>1</sup>,
+                </span>
+                <span class="author-block">
+                  <!-- TODO: fill scholar URL for Yizhi Luo -->
+                  <a href="https://www.google.com/" target="_blank" rel="noreferrer">Yizhi Luo</a><sup>1</sup>,
+                </span>
+                <span class="author-block">
+                  <!-- TODO: fill scholar URL for Shuo Sun -->
+                  <a href="https://scholar.google.com/citations?hl=zh-CN&user=kGgWv8IAAAAJ" target="_blank" rel="noreferrer">Shuo Sun</a><sup>1,&dagger;</sup>
+                </span>
+              </div>
+
+              <div class="is-size-5 publication-authors">
+                <span class="author-block"><sup>1</sup> The Hong Kong University of Science and Technology (Guangzhou)</span>
+                <span class="author-block"><sup>2</sup> The Hong Kong Polytechnic University</span>
+              </div>
+
+              <div class="is-size-6 publication-authors">
+                <span class="author-block"><sup>*</sup> Equal contribution</span>
+                <span class="author-block"><sup>&dagger;</sup> Corresponding author</span>
+              </div>
+
+              <div class="is-size-6 publication-authors lab-source">
+                <span class="author-block">
+                  <!-- TODO: confirm lab/org link; placeholder uses HKUST(GZ) -->
+                  Project from
+                  <a href="https://github.com/finbrain-lab-hkustgz" target="_blank" rel="noreferrer">FinBrain Lab, HKUST(GZ)</a>.
+                </span>
+              </div>
+
+              <div class="column has-text-centered">
+                <div class="publication-links">
+                  <span class="link-block">
+                    <!-- TODO: replace href with the real arXiv URL once you have it -->
+                    <a
+                      href="https://arxiv.org/abs/2604.20374"
+                      target="_blank"
+                      class="external-link button is-normal is-rounded is-dark"
+                    >
+                      <span class="icon">
+                        <i class="ai ai-arxiv"></i>
+                      </span>
+                      <span>arXiv</span>
+                    </a>
+                  </span>
+                  <span class="link-block">
+                    <!-- TODO: replace href with the final GitHub repo URL after you push -->
+                    <a
+                      href="https://github.com/finbrain-lab-hkustgz/Deep-AMM-Events"
+                      target="_blank"
+                      class="external-link button is-normal is-rounded is-dark"
+                    >
+                      <span class="icon">
+                        <i class="fab fa-github"></i>
+                      </span>
+                      <span>GitHub</span>
+                    </a>
+                  </span>
+                  <span class="link-block">
+                    <a
+                      href="https://doi.org/10.1145/3770855.3817502"
+                      target="_blank"
+                      class="external-link button is-normal is-rounded is-dark"
+                    >
+                      <span class="icon">
+                        <i class="fas fa-link"></i>
+                      </span>
+                      <span>DOI</span>
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero teaser">
+      <div class="container is-max-desktop">
+        <div class="hero-body">
+          <div class="image-wrap">
+            <img src="./assets/images/framework.png" alt="Framework of the AMM event-aware forecasting pipeline" />
+          </div>
+          <h2 class="subtitle has-text-centered mt-4">
+            We curate <strong>8.9M on-chain AMM events</strong> across Pendle, Uniswap V3, Aave, and Morpho, and
+            propose an <strong>Uncertainty Weighted MSE (UWM)</strong> loss for event-aware temporal point process
+            forecasting on block-height.
+          </h2>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column is-full-width">
+            <h2 class="title is-3 has-text-centered">Abstract</h2>
+            <div class="content has-text-justified">
+              <p>
+                Automated Market Makers (AMMs), as a core infrastructure of decentralized finance (DeFi), uniquely
+                drive on-chain asset pricing through a deterministic reserve ratio mechanism. Unlike traditional
+                markets, AMM price dynamics is triggered largely by on-chain events (e.g., swap) that change the
+                reserve ratio, rather than by continuous responses to off-chain information. This makes
+                <strong>event-level analysis</strong> crucial for understanding price formation in AMMs.
+              </p>
+              <p>
+                However, existing research generally neglects the micro-structural dynamics at the AMM level, lacking
+                both a comprehensive dataset covering multiple protocols with fine-grained event classification and an
+                effective framework for event-aware modeling. To fill this gap, we construct a dataset containing
+                <strong>8.9 million on-chain event records</strong> from four representative AMM protocols
+                : Pendle, Uniswap V3, Aave, and Morpho with precise annotations of transaction type and
+                block-height timestamps.
+              </p>
+              <p>
+                We further propose an <strong>Uncertainty Weighted Mean Squared Error (UWM)</strong> loss that
+                incorporates a block-interval regression term into the standard Temporal Point Process (TPP) objective
+                via homoscedastic uncertainty weighting. Extensive experiments on
+                <strong>eight TPP architectures</strong> across four DeFi protocols demonstrate that UWM reduces
+                time-prediction error by an average of <strong>31.17%</strong> while preserving event-type
+                accuracy, establishing a robust benchmark for event-aware prediction in the AMM ecosystem.
+                This work provides the necessary data foundation and methodological framework for modeling the 
+                discreteness and event-driven characteristics of on-chain price discovery.
+              </p>
+            </div>
+
+            <div class="stat-grid">
+              <div class="stat-card">
+                <div class="stat-value">8.9M</div>
+                <div class="stat-label">On-chain event records (Jan 2024 &ndash; Sep 2025)</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">4</div>
+                <div class="stat-label">DeFi protocols across 359 liquidity pools</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">8</div>
+                <div class="stat-label">TPP backbones benchmark</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">31.17%</div>
+                <div class="stat-label">Average reduction in block-interval RMSE</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column is-full-width">
+            <h2 class="title is-3 has-text-centered">Why Event-Aware?</h2>
+            <div class="content has-text-justified section-intro">
+              <p>
+                Unlike continuous, order-book-driven markets, an AMM's price moves
+                <strong>only when an event changes the reserve ratio</strong>. Symmetric liquidity events
+                (Mint/Burn) leave the price untouched; asymmetric events (Swap, UpdateImpliedRate) reprice the pool
+                immediately and discretely.
+              </p>
+              <p>
+                Concretely, a Pendle pool initialized with reserves
+                $(R_A, R_B)=(100,100)$ and price $P_A=1.00$ stays at $P_A=1.00$ after a symmetric Mint that doubles
+                both sides. A subsequent <em>Swap</em> of <strong>20&nbsp;B&nbsp;&rarr;&nbsp;A</strong> shifts
+                reserves to $(220, 180)$ and drops $P_A$ to <strong>0.82</strong> in a single block. Price volatility
+                in AMMs is therefore an exclusive derivative of <strong>ratio-altering events</strong>, not aggregate
+                liquidity. This is why we model on-chain activity as a marked event stream on the
+                <strong>block-height axis</strong>, rather than as a regularly sampled wall-clock time series.
+              </p>
+            </div>
+
+            <div class="protocol-grid">
+              <div class="protocol-card">
+                <div class="pcat">Decentralized Exchange</div>
+                <h4>Uniswap V3</h4>
+                <p>Highest-frequency spot-trading venue. Bursty block utilization tracks exogenous volatility shocks.</p>
+              </div>
+              <div class="protocol-card">
+                <div class="pcat">Lending</div>
+                <h4>Aave</h4>
+                <p>Supply, borrow, repay, and liquidation events. Sparse but high-impact rate-update dynamics.</p>
+              </div>
+              <div class="protocol-card">
+                <div class="pcat">Lending</div>
+                <h4>Morpho</h4>
+                <p>Mixed regime: several pools are stable while others exhibit heavy-tailed gap distributions.</p>
+              </div>
+              <div class="protocol-card">
+                <div class="pcat">Yield Trading</div>
+                <h4>Pendle</h4>
+                <p>PT/YT lifecycle events (Mint, Burn, Swap, UpdateImpliedRate) with continuous state-update churn.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column is-full-width">
+            <h2 class="title is-3 has-text-centered">Framework</h2>
+            <div class="content has-text-justified section-intro">
+              <p>
+                We frame on-chain AMM activity as a <strong>marked temporal point process (TPP)</strong>. For an
+                asset $a$ the history is $\mathcal{S}^a = \{(t_i, y_i)\}_{i=1}^{L_a}$, where $t_i \in \mathbb{N}$ is
+                the block height of the $i$-th event and $y_i \in \mathcal{Y}$ is its mark. The benchmark task is to
+                predict the next mark $y_{i+1}$ and the next block $t_{i+1} = t_i + \Delta_{i+1}$ given the history
+                $\mathcal{H}_{t_i}$.
+              </p>
+              <p>
+                Concurrent transactions in the same block are encoded as composite marks, yielding
+                <strong>31 distinct event-type combinations</strong> over five atomic types
+                (Swap-in, Swap-out, Mint, Burn, UpdateImpliedRate). Block heights are kept in their native
+                8-digit scale because the inter-event gap distribution is heavy-tailed: a mean of 48.5 blocks on
+                Pendle stretches to a maximum of 1,426 blocks, while Uniswap V3 hovers at a median of just 1 block.
+              </p>
+              <p>
+                The framework has two coupled contributions. <strong>Dataset.</strong> A standardized,
+                block-aligned JSON corpus of 8.9M events across Uniswap V3, Aave, Morpho, and Pendle, extracted via a
+                read-only Ethereum full node. <strong>UWM loss.</strong> An Uncertainty-Weighted MSE objective that
+                combines the standard TPP negative-log-likelihood with a homoscedastic-uncertainty-weighted
+                block-interval regression term, balancing type and time heads automatically rather than via
+                hand-tuned weights.
+              </p>
+            </div>
+
+            <div class="findings-box content has-text-justified">
+              <p>
+                <strong>UWM objective.</strong> With $\sigma_m = \mathrm{softplus}(s_m)$ and the three component
+                losses $\ell_{\text{mark}}$, $\ell_{\text{time}}$, $\ell_{\text{mse}}$:
+              </p>
+              <p style="text-align:center; font-family: 'Google Sans', sans-serif; font-size: 1.05rem;">
+                $\mathcal{L}_{\text{UWM}} = \tfrac{1}{2}\sum_{m=1}^{3}\bigl(\sigma_m^{-2}\,\ell_m + \log\sigma_m^2\bigr)$
+              </p>
+              <p>
+                The mark likelihood and time likelihood are inherited from any neural TPP backbone, while
+                $\ell_{\text{mse}}$ pulls predictions toward the correct numeric block gap. The uncertainty
+                weighting decides automatically how aggressively to trade type calibration against time accuracy on
+                each protocol. The idea is orthogonal to the encoder and compatible with RNN, attention, and
+                ODE-style TPPs.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column is-full-width">
+            <h2 class="title is-3 has-text-centered">Dataset Microstructure</h2>
+            <div class="content has-text-justified section-intro">
+              <p>
+                The dataset captures <strong>8,917,353</strong> events from the Ethereum mainnet between
+                Jan&nbsp;1, 2024 and Sep&nbsp;16, 2025 (block height 18,908,896&ndash;23,374,292), aggregated
+                across 359 liquidity pools (Pendle: 296, Aave: 53, Uniswap: 5, Morpho: 5). Coverage is intentionally
+                non-uniform, that is on-chain activity is highly skewed across mechanisms and we preserve this skew
+                because it is part of the forecasting challenge.
+              </p>
+            </div>
+
+            <div class="figure-visual">
+              <img src="./assets/results/block_microstructure_combined.png" alt="Block utilization, event synchronization, and occupancy distributions across DeFi protocols" />
+            </div>
+            <div class="content has-text-justified mt-4">
+              <p>
+                <strong>(a) Block utilization.</strong> Pendle exhibits a high-intensity, continuous heatmap (deep
+                red) driven by frequent state updates. Uniswap V3 shows bursty utilization. Intermittent
+                vertical red stripes correlate with exogenous volatility shocks. Aave and Morpho remain sparse and
+                low-entropy.
+              </p>
+              <p>
+                <strong>(b) Cross-protocol synchronization.</strong> Conditional event probability anchored on
+                Uniswap V3 trigger blocks shows a sharp, synchronous peak at offset $k=0$ across Aave, Morpho, and
+                Pendle, with rapid decay at $k=1$. Off-chain keepers and MEV bots close inter-block latency almost
+                instantly.
+              </p>
+              <p>
+                <strong>(c) Occupancy heavy tail.</strong> Block-occupancy follows a power law
+                $P(x) \propto x^{-\alpha}$. Uniswap V3 has the heaviest tail (extending past $x>200$), absorbing
+                rare congestion bursts; Morpho has the steepest decay, indicating a far more predictable usage
+                pattern.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column is-full-width">
+            <h2 class="title is-3 has-text-centered">Experimental Results</h2>
+            <div class="content has-text-justified section-intro">
+              <p>
+                We benchmark eight TPP backbones &mdash; <strong>NHP, RMTPP, SAHP, THP, AttNHP, IntensityFree,
+                FullyNN, ODETPP</strong> &mdash; under both standard NLL and our UWM loss across the four protocols.
+                All numbers are mean&nbsp;&plusmn;&nbsp;std over 5 random seeds on held-out test splits; chronological
+                split prevents event-level leakage.
+              </p>
+              <p>
+                Two patterns dominate. First, NLL alone leaves several intensity-based models with severe temporal
+                miscalibration on bursty protocols (Pendle, Aave). Second, UWM acts as a <strong>temporal
+                stabilization mechanism</strong>: it dramatically reduces RMSE for collapsed models while remaining
+                close to a no-op on already-calibrated baselines.
+              </p>
+            </div>
+
+            <div class="columns is-multiline">
+              <div class="column is-12">
+                <div class="result-card">
+                  <div class="card-content">
+                    <h3 class="title is-4">Pendle &amp; Uniswap V3 &mdash; Time RMSE (&darr;)</h3>
+                    <p class="result-note">
+                      Baseline NLL versus UWM. Lower is better. <span class="delta-pos">Red</span> = improvement,
+                      <span class="delta-neg">green</span> = degradation. Mean&nbsp;&plusmn;&nbsp;std over 5 seeds.
+                    </p>
+                    <div class="table-wrapper">
+                      <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead>
+                          <tr>
+                            <th>Model</th>
+                            <th>Pendle &mdash; NLL</th>
+                            <th>Pendle &mdash; UWM</th>
+                            <th>Uniswap V3 &mdash; NLL</th>
+                            <th>Uniswap V3 &mdash; UWM</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>NHP</td>
+                            <td>108.89 &plusmn; 1.84</td>
+                            <td><span class="delta-pos">94.28 &plusmn; 0.21</span></td>
+                            <td>5.26 &plusmn; 0.24</td>
+                            <td><span class="delta-pos">4.70 &plusmn; 0.00</span></td>
+                          </tr>
+                          <tr>
+                            <td>RMTPP</td>
+                            <td>769.14 &plusmn; 147.25</td>
+                            <td><span class="delta-pos">95.55 &plusmn; 0.10</span></td>
+                            <td>5.28 &plusmn; 0.07</td>
+                            <td><span class="delta-neg">6.59 &plusmn; 0.54</span></td>
+                          </tr>
+                          <tr>
+                            <td>SAHP</td>
+                            <td><strong>93.87 &plusmn; 3.85</strong></td>
+                            <td><span class="delta-neg">93.98 &plusmn; 0.29</span></td>
+                            <td><strong>4.64 &plusmn; 0.05</strong></td>
+                            <td><span class="delta-pos">4.63 &plusmn; 0.02</span></td>
+                          </tr>
+                          <tr>
+                            <td>THP</td>
+                            <td>958.37 &plusmn; 62.97</td>
+                            <td><span class="delta-pos">94.50 &plusmn; 1.28</span></td>
+                            <td>5.06 &plusmn; 0.03</td>
+                            <td>5.06 &plusmn; 0.00</td>
+                          </tr>
+                          <tr>
+                            <td>AttNHP</td>
+                            <td>100.63 &plusmn; 2.22</td>
+                            <td><span class="delta-pos">96.73 &plusmn; 3.32</span></td>
+                            <td>25.49 &plusmn; 1.13</td>
+                            <td><span class="delta-pos">5.03 &plusmn; 0.33</span></td>
+                          </tr>
+                          <tr>
+                            <td>IntensityFree</td>
+                            <td><strong>81.32 &plusmn; 2.50</strong></td>
+                            <td>&mdash;</td>
+                            <td>4.64 &plusmn; 0.16</td>
+                            <td>&mdash;</td>
+                          </tr>
+                          <tr>
+                            <td>FullyNN</td>
+                            <td>665.56 &plusmn; 100.64</td>
+                            <td><span class="delta-pos">91.08 &plusmn; 1.71</span></td>
+                            <td>108.72 &plusmn; 1.61</td>
+                            <td><span class="delta-pos">105.43 &plusmn; 0.29</span></td>
+                          </tr>
+                          <tr>
+                            <td>ODETPP</td>
+                            <td>6815.47 &plusmn; 1266.82</td>
+                            <td><span class="delta-pos">277.07 &plusmn; 293.57</span></td>
+                            <td>5.20 &plusmn; 0.08</td>
+                            <td><span class="delta-neg">7.47 &plusmn; 2.39</span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="column is-12">
+                <div class="result-card">
+                  <div class="card-content">
+                    <h3 class="title is-4">Aave &amp; Morpho &mdash; Time RMSE (&darr;)</h3>
+                    <p class="result-note">
+                      Lending-protocol regimes are the hardest setting under NLL. UWM corrects the largest collapses
+                      (FullyNN on Aave: 4670 &rarr; 72) and remains close to a no-op when the baseline is already
+                      calibrated.
+                    </p>
+                    <div class="table-wrapper">
+                      <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead>
+                          <tr>
+                            <th>Model</th>
+                            <th>Aave &mdash; NLL</th>
+                            <th>Aave &mdash; UWM</th>
+                            <th>Morpho &mdash; NLL</th>
+                            <th>Morpho &mdash; UWM</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>NHP</td>
+                            <td>80.27 &plusmn; 2.05</td>
+                            <td><span class="delta-pos">67.49 &plusmn; 0.28</span></td>
+                            <td>206.32 &plusmn; 1.65</td>
+                            <td><span class="delta-pos">199.22 &plusmn; 0.73</span></td>
+                          </tr>
+                          <tr>
+                            <td>RMTPP</td>
+                            <td>670.71 &plusmn; 81.00</td>
+                            <td><span class="delta-pos">225.03 &plusmn; 22.98</span></td>
+                            <td>204.07 &plusmn; 0.38</td>
+                            <td><span class="delta-neg">204.38 &plusmn; 0.33</span></td>
+                          </tr>
+                          <tr>
+                            <td>SAHP</td>
+                            <td><strong>68.35 &plusmn; 3.77</strong></td>
+                            <td><span class="delta-neg">72.17 &plusmn; 3.64</span></td>
+                            <td>203.97 &plusmn; 0.03</td>
+                            <td><span class="delta-neg">204.74 &plusmn; 0.01</span></td>
+                          </tr>
+                          <tr>
+                            <td>THP</td>
+                            <td>359.56 &plusmn; 141.89</td>
+                            <td><span class="delta-pos">154.27 &plusmn; 17.64</span></td>
+                            <td>1585.13 &plusmn; 619.19</td>
+                            <td><span class="delta-pos">390.92 &plusmn; 51.08</span></td>
+                          </tr>
+                          <tr>
+                            <td>AttNHP</td>
+                            <td>66.56 &plusmn; 0.31</td>
+                            <td><span class="delta-pos">65.90 &plusmn; 0.17</span></td>
+                            <td><strong>192.08 &plusmn; 0.15</strong></td>
+                            <td><span class="delta-neg">192.10 &plusmn; 0.19</span></td>
+                          </tr>
+                          <tr>
+                            <td>IntensityFree</td>
+                            <td><strong>58.85 &plusmn; 0.13</strong></td>
+                            <td>&mdash;</td>
+                            <td>380.71 &plusmn; 16.69</td>
+                            <td>&mdash;</td>
+                          </tr>
+                          <tr>
+                            <td>FullyNN</td>
+                            <td>4670.34 &plusmn; 124.96</td>
+                            <td><span class="delta-pos">71.60 &plusmn; 5.22</span></td>
+                            <td>236.54 &plusmn; 31.55</td>
+                            <td><span class="delta-pos">204.21 &plusmn; 0.16</span></td>
+                          </tr>
+                          <tr>
+                            <td>ODETPP</td>
+                            <td>5182.72 &plusmn; 345.33</td>
+                            <td><span class="delta-pos">1509.63 &plusmn; 84.37</span></td>
+                            <td>1240.81 &plusmn; 14.82</td>
+                            <td><span class="delta-pos">323.95 &plusmn; 11.37</span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="columns is-vcentered mt-5">
+              <div class="column is-7">
+                <div class="figure-visual">
+                  <img src="./assets/results/metrics_time_rmse_xlarge.png" alt="UWM versus NLL: Time RMSE on the Pendle branch" />
+                </div>
+              </div>
+              <div class="column is-5">
+                <div class="figure-copy content has-text-justified">
+                  <h3 class="title is-4">Time RMSE: UWM vs.&nbsp;NLL on Pendle</h3>
+                  <p>
+                    UWM substantially reduces block-interval RMSE for the four temporally-collapsed
+                    intensity-based models &mdash; <strong>RMTPP, THP, FullyNN, ODETPP</strong>. The overall
+                    Pendle reduction averages <strong>53.88%</strong>.
+                  </p>
+                  <p>
+                    For models that are already well calibrated (NHP, SAHP, AttNHP), UWM behaves as a near no-op.
+                    The objective never destabilizes a strong baseline, it only kicks in where likelihood-only
+                    training fails on heavy-tailed gaps.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="columns is-vcentered mt-5">
+              <div class="column is-5">
+                <div class="figure-copy content has-text-justified">
+                  <h3 class="title is-4">Type Accuracy is Preserved</h3>
+                  <p>
+                    A natural worry with adding a numeric regression term is that it would steal capacity from the
+                    type head. The empirical picture says the opposite: <strong>type accuracy is preserved or
+                    improved</strong> on the protocols where UWM most aggressively rescues the time head.
+                  </p>
+                  <p>
+                    This is consistent with the homoscedastic uncertainty parameterization. When the time component
+                    becomes easier to fit, the model can spend more of its capacity on the discrete mark
+                    distribution.
+                  </p>
+                </div>
+              </div>
+              <div class="column is-7">
+                <div class="figure-visual">
+                  <img src="./assets/results/metrics_type_accuracy_xlarge.png" alt="UWM versus NLL: Type accuracy on the Pendle branch" />
+                </div>
+              </div>
+            </div>
+
+            <div class="columns is-vcentered mt-5">
+              <div class="column is-7">
+                <div class="figure-visual">
+                  <img src="./assets/results/metrics_otd_xlarge.png" alt="OTD with horizon = 5 events" />
+                </div>
+              </div>
+              <div class="column is-5">
+                <div class="figure-copy content has-text-justified">
+                  <h3 class="title is-4">Multi-step Forecasting (OTD, $H=5$)</h3>
+                  <p>
+                    The optimal-transport distance on five-event prediction horizons mirrors the single-step RMSE
+                    picture: UWM dominates on the burst-collapsed models and matches the baseline elsewhere. The
+                    ranking across backbones is preserved as horizon grows, so the loss does not introduce a
+                    horizon-specific artifact.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="findings-box content has-text-justified">
+              <p>
+                <strong>UWM is a stabilizer, not a universal upgrade.</strong> The largest gains concentrate on
+                bursty regimes (Pendle, Aave) and on architectures whose continuous-time parameterization is
+                sensitive to heavy-tailed gaps (RMTPP, THP, FullyNN, ODETPP). Already-calibrated models on
+                already-easy regimes (Uniswap V3) move only marginally.
+              </p>
+              <p>
+                <strong>Numeric residuals matter, not just likelihoods.</strong> Pure NLL fits the gap distribution
+                in shape but tolerates large numeric errors on the tails. Pendle, Aave, and Morpho show that the
+                resulting RMSE explodes on a small number of "blast points," and that adding a residual-aware
+                regression term is the cheapest way to recover.
+              </p>
+              <p>
+                <strong>Type accuracy is robust.</strong> Across all four protocols, UWM maintains or improves
+                event-type prediction accuracy, the rebalancing happens through the learned uncertainty
+                weights, not by sacrificing the discrete head.
+              </p>
+              <p>
+                <strong>Cross-protocol heterogeneity is the headline finding.</strong> Bursty AMM dynamics cannot
+                be reduced to a single universal "best model"; the right backbone depends on the protocol's gap
+                distribution, and the loss has to absorb the variance.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column is-full-width">
+            <h2 class="title is-3 has-text-centered">Downstream: Event-Aware Trading on sUSDe</h2>
+            <div class="content has-text-justified section-intro">
+              <p>
+                As a downstream illustration, consider a Pendle sUSDe pool initialized with 1,000 PT and 2,000 SY
+                (PT/SY = 0.50). A predicted Swap two blocks ahead adds 200 PT and removes 400 SY, taking the
+                reserves to 1,200 PT and 1,600 SY (PT/SY = 0.75). PT then trades at $\approx 1.333$ SY rather than
+                $2.0$ SY &mdash; a $\sim$33% drop &mdash; which raises the implied APY of holding PT to maturity.
+              </p>
+              <p>
+                <strong>Yield trading.</strong> The higher implied yield motivates rebalancing from PT to YT.
+                Selling 100 PT now realizes $100 \times 1.333 = 133.3$ SY while increasing exposure to future yield
+                growth, which is exactly the design intent of YT.
+              </p>
+              <p>
+                <strong>Arbitrage.</strong> If PT trades externally at 1.50 SY, the predicted swap reverses the
+                profitable direction. Before the swap the trader buys 100 PT externally for 150 SY and sells into
+                the pool at 200 SY (50 SY profit before fees); after the swap the pool offers 100 PT at 133.3 SY,
+                so the trader buys from the pool and sells externally at 150 SY (16.7 SY profit before fees). The
+                forecast turns the raw event log into a proactive signal for either yield rebalancing or
+                cross-market arbitrage.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column is-full-width">
+            <h2 class="title is-3 has-text-centered">Conclusion</h2>
+            <div class="content has-text-justified">
+              <p>
+                We presented Deep-AMM-Events, a comprehensive 8.9M-event corpus across four representative DeFi
+                protocols (Pendle, Uniswap V3, Aave, Morpho) and a complementary Uncertainty Weighted MSE loss
+                that augments standard TPP training with a homoscedastic-uncertainty-weighted block-interval
+                regression term. Across eight TPP backbones, UWM reduces time-prediction error by an average of
+                31.17% while preserving event-type accuracy, with the largest gains concentrated on bursty
+                regimes where likelihood-only training collapses. The dataset and benchmark provide a foundation
+                for future work on cross-protocol synchronization, multi-step block-height forecasting, and
+                event-aware execution strategies in on-chain markets. All datasets and source code are publicly
+                released.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section bibtex-section" id="BibTeX">
+      <div class="container is-max-desktop content">
+        <h2 class="title is-3 has-text-centered">BibTeX</h2>
+        <pre><code>@inproceedings{jia2026amm,
+  title     = {Towards Event-Aware Forecasting in DeFi: Insights from On-chain Automated Market Maker Protocols},
+  author    = {Jia, Huaiyu and You, Jiehshun and Liu, Jingyu and Luo, Yizhi and Sun, Shuo},
+  booktitle = {Proceedings of the 32nd ACM SIGKDD Conference on Knowledge Discovery and Data Mining},
+  year      = {2026}
+}</code></pre>
+      </div>
+    </section>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+    </script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+  </body>
+</html>
