@@ -1,0 +1,202 @@
+pipeline_config_id: runner_config
+
+data:
+  pendle:
+    data_format: json
+    train_dir:  ./data/pendle/train.json
+    valid_dir:  ./data/pendle/dev.json
+    test_dir:  ./data/pendle/test.json
+    data_specs:
+      num_event_types: 31
+      pad_token_id: 31
+      padding_side: right
+
+# NHP with Hybrid Loss (NLL + RMSE with uncertainty weighting)
+NHP_hybrid_loss_train:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: NHP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 256
+    max_epoch: 50
+    shuffle: True
+    optimizer: adam
+    learning_rate: 1.e-3
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0  # Change to your GPU id, or -1 for CPU
+  model_config:
+    hidden_size: 64
+    time_emb_size: 16
+    num_layers: 2
+    num_heads: 2
+    mc_num_sample_per_step: 20
+    sharing_param_layer: False
+    loss_integral_num_sample_per_step: 20
+    dropout: 0.1
+    use_ln: False
+    model_specs:
+      use_hybrid_loss: true  # Enable hybrid loss
+      init_log_var_nll: 0.0  # Initial log variance for NLL loss
+      init_log_var_rmse: 0.0  # Initial log variance for RMSE loss
+      beta: 1.0
+      bias: true
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 5
+    pad_token_id: 31
+    num_event_types: 31
+    num_event_types_pad: 32
+
+# RMTPP with Hybrid Loss
+RMTPP_hybrid_loss_train:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: RMTPP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 256
+    max_epoch: 50
+    shuffle: True
+    optimizer: adam
+    learning_rate: 1.e-3
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+  model_config:
+    hidden_size: 64
+    time_emb_size: 16
+    num_layers: 2
+    num_heads: 2
+    mc_num_sample_per_step: 20
+    sharing_param_layer: False
+    loss_integral_num_sample_per_step: 20
+    dropout: 0.1
+    use_ln: False
+    model_specs:
+      use_hybrid_loss: true
+      init_log_var_nll: 0.0
+      init_log_var_rmse: 0.0
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 5
+    pad_token_id: 31
+    num_event_types: 31
+    num_event_types_pad: 32
+
+# THP with Hybrid Loss
+THP_hybrid_loss_train:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: THP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 128  # Smaller batch size for attention models
+    max_epoch: 50
+    shuffle: True
+    optimizer: adam
+    learning_rate: 1.e-3
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+  model_config:
+    hidden_size: 64
+    time_emb_size: 16
+    num_layers: 2
+    num_heads: 4
+    mc_num_sample_per_step: 20
+    sharing_param_layer: False
+    loss_integral_num_sample_per_step: 20
+    dropout: 0.1
+    use_ln: True
+    model_specs:
+      use_hybrid_loss: true
+      init_log_var_nll: 0.0
+      init_log_var_rmse: 0.0
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 5
+    pad_token_id: 31
+    num_event_types: 31
+    num_event_types_pad: 32
+
+# Configuration for testing without hybrid loss (baseline)
+NHP_baseline_train:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: NHP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 256
+    max_epoch: 50
+    shuffle: True
+    optimizer: adam
+    learning_rate: 1.e-3
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+  model_config:
+    hidden_size: 64
+    time_emb_size: 16
+    num_layers: 2
+    num_heads: 2
+    mc_num_sample_per_step: 20
+    sharing_param_layer: False
+    loss_integral_num_sample_per_step: 20
+    dropout: 0.1
+    use_ln: False
+    model_specs:
+      use_hybrid_loss: false  # Disabled - use standard NLL loss only
+      beta: 1.0
+      bias: true
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 5
+    pad_token_id: 31
+    num_event_types: 31
+    num_event_types_pad: 32

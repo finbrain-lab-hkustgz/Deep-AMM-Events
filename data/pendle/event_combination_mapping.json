@@ -1,0 +1,144 @@
+{
+  "0": [
+    "Burn"
+  ],
+  "1": [
+    "Mint"
+  ],
+  "2": [
+    "Swap-PT-In"
+  ],
+  "3": [
+    "Swap-PT-Out"
+  ],
+  "4": [
+    "UpdateImpliedRate"
+  ],
+  "5": [
+    "Burn",
+    "Mint"
+  ],
+  "6": [
+    "Burn",
+    "Swap-PT-In"
+  ],
+  "7": [
+    "Burn",
+    "Swap-PT-Out"
+  ],
+  "8": [
+    "Burn",
+    "UpdateImpliedRate"
+  ],
+  "9": [
+    "Mint",
+    "Swap-PT-In"
+  ],
+  "10": [
+    "Mint",
+    "Swap-PT-Out"
+  ],
+  "11": [
+    "Mint",
+    "UpdateImpliedRate"
+  ],
+  "12": [
+    "Swap-PT-In",
+    "Swap-PT-Out"
+  ],
+  "13": [
+    "Swap-PT-In",
+    "UpdateImpliedRate"
+  ],
+  "14": [
+    "Swap-PT-Out",
+    "UpdateImpliedRate"
+  ],
+  "15": [
+    "Burn",
+    "Mint",
+    "Swap-PT-In"
+  ],
+  "16": [
+    "Burn",
+    "Mint",
+    "Swap-PT-Out"
+  ],
+  "17": [
+    "Burn",
+    "Mint",
+    "UpdateImpliedRate"
+  ],
+  "18": [
+    "Burn",
+    "Swap-PT-In",
+    "Swap-PT-Out"
+  ],
+  "19": [
+    "Burn",
+    "Swap-PT-In",
+    "UpdateImpliedRate"
+  ],
+  "20": [
+    "Burn",
+    "Swap-PT-Out",
+    "UpdateImpliedRate"
+  ],
+  "21": [
+    "Mint",
+    "Swap-PT-In",
+    "Swap-PT-Out"
+  ],
+  "22": [
+    "Mint",
+    "Swap-PT-In",
+    "UpdateImpliedRate"
+  ],
+  "23": [
+    "Mint",
+    "Swap-PT-Out",
+    "UpdateImpliedRate"
+  ],
+  "24": [
+    "Swap-PT-In",
+    "Swap-PT-Out",
+    "UpdateImpliedRate"
+  ],
+  "25": [
+    "Burn",
+    "Mint",
+    "Swap-PT-In",
+    "Swap-PT-Out"
+  ],
+  "26": [
+    "Burn",
+    "Mint",
+    "Swap-PT-In",
+    "UpdateImpliedRate"
+  ],
+  "27": [
+    "Burn",
+    "Mint",
+    "Swap-PT-Out",
+    "UpdateImpliedRate"
+  ],
+  "28": [
+    "Burn",
+    "Swap-PT-In",
+    "Swap-PT-Out",
+    "UpdateImpliedRate"
+  ],
+  "29": [
+    "Mint",
+    "Swap-PT-In",
+    "Swap-PT-Out",
+    "UpdateImpliedRate"
+  ],
+  "30": [
+    "Burn",
+    "Mint",
+    "Swap-PT-In",
+    "Swap-PT-Out",
+    "UpdateImpliedRate"
+  ]
+}

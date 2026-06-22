@@ -6,3 +6,55 @@ __pycache__/
 *.pyc
 .venv/
 node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+eggs/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Training outputs
+checkpoints/
+tensorboard_logs/
+*.out
+*.log
+*.json.lock
+
+# Model predictions
+pred.pkl
+
+# Hybrid loss monitoring
+*_hybrid_loss_history.json
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment
+.env
+.env.local
+
+# Claude Code
+.claude/

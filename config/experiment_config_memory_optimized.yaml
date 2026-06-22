@@ -1,0 +1,261 @@
+pipeline_config_id: runner_config
+
+data:
+  pendle:
+    data_format: json
+    train_dir:  ./data/pendle/train.json
+    valid_dir:  ./data/pendle/dev.json
+    test_dir:  ./data/pendle/test.json
+    data_specs:
+      num_event_types: 31
+      pad_token_id: 31
+      padding_side: right
+      # Reduce max_len to save memory
+      # truncation_strategy: longest_first
+      # max_len: 256  # Reduced from default
+
+# Ultra memory-efficient configuration for NHP
+NHP_train_memory_opt:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: NHP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 8  # Very small batch size
+    max_epoch: 20
+    shuffle: True
+    optimizer: adam
+    learning_rate: 1.e-3
+    valid_freq: 2  # Validate less frequently to save memory
+    use_tfb: False  # Disable tensorboard to save memory
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0  # Will be overridden by script
+    # Memory optimization
+    gradient_accumulation_steps: 8  # Effective batch size = 8 * 8 = 64
+    gradient_checkpointing: True
+    max_grad_norm: 1.0
+  model_config:
+    hidden_size: 32  # Smaller model
+    loss_integral_num_sample_per_step: 5  # Greatly reduced
+    dropout: 0.1
+    use_ln: False  # Disable layer norm to save memory
+    # Hybrid loss parameters (new structure)
+    model_specs:
+      use_hybrid_loss: False  # Will be overridden by command line
+      init_log_var_nll: 0.0  # Initial uncertainty for NLL loss
+      init_log_var_mse: 0.0  # Initial uncertainty for MSE loss
+    thinning:
+      num_seq: 1  # Minimal sequences
+      num_sample: 1
+      num_exp: 20  # Greatly reduced
+      look_ahead_time: 5  # Reduced
+      patience_counter: 3
+      over_sample_rate: 2
+      num_samples_boundary: 2
+      dtime_max: 2
+      num_step_gen: 1
+
+# Memory-efficient configuration for multi-GPU (without hybrid loss)
+NHP_train_multi_gpu:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: NHP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 16  # Per GPU batch size
+    max_epoch: 100
+    shuffle: False
+    optimizer: adam
+    learning_rate: 1.e-2
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+    gradient_accumulation_steps: 4
+    # max_grad_norm: 5.0
+  model_config:
+    hidden_size: 64  # Medium size
+    loss_integral_num_sample_per_step: 20
+    dropout: 0.1
+    model_specs:
+      use_hybrid_loss: false  # Can be overridden by command line
+      # Hybrid loss structure: uncertainty weighting between NLL and MSE
+      # MSE uses direct time differences (prediction vs label)
+      init_log_var_nll: 0.0  # Initial uncertainty for NLL loss
+      init_log_var_mse: 0.0  # Initial uncertainty for MSE loss
+      bias: true
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 7000
+      num_step_gen: 1
+
+# Memory-efficient configuration for multi-GPU WITH hybrid loss (BALANCED)
+NHP_train_multi_gpu_hybrid:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: NHP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 16  # Per GPU batch size
+    max_epoch: 100
+    shuffle: False
+    optimizer: adam
+    learning_rate: 1.e-2
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+    gradient_accumulation_steps: 4
+  model_config:
+    hidden_size: 64  # Medium size
+    loss_integral_num_sample_per_step: 20
+    dropout: 0.1
+    model_specs:
+      use_hybrid_loss: true  # Enable hybrid loss
+      # Using MSE for natural balance with NLL
+      init_log_var_nll: 0.0  # Initial weight for NLL
+      init_log_var_mse: 0.0  # Initial weight for MSE
+      beta: 1.0
+      bias: true
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 600
+      num_step_gen: 1
+
+# Minimal configuration for testing
+NHP_train_minimal:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: NHP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 4  # Tiny batch size
+    max_epoch: 2  # Quick test
+    shuffle: True
+    optimizer: adam
+    learning_rate: 1.e-3
+    valid_freq: 1
+    use_tfb: False
+    metrics: [ 'acc' ]
+    seed: 2019
+    gpu: 0
+  model_config:
+    hidden_size: 16  # Tiny model
+    loss_integral_num_sample_per_step: 2
+    dropout: 0.0
+    use_ln: False
+    thinning:
+      num_seq: 1
+      num_sample: 1
+      num_exp: 10
+      look_ahead_time: 2
+      patience_counter: 2
+      over_sample_rate: 2
+      num_samples_boundary: 2
+      dtime_max: 2
+      num_step_gen: 1
+
+RMTPP_train_memory_opt:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: RMTPP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 32  # RMTPP is more memory efficient
+    max_epoch: 20
+    shuffle: True
+    optimizer: adam
+    learning_rate: 1.e-3
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+  model_config:
+    hidden_size: 32
+    time_emb_size: 8  # Reduced
+    num_layers: 1  # Single layer
+    num_heads: 2
+    mc_num_sample_per_step: 5
+    sharing_param_layer: True  # Share parameters to save memory
+    loss_integral_num_sample_per_step: 5
+    dropout: 0.1
+    use_ln: False
+    thinning:
+      num_seq: 2
+      num_sample: 1
+      num_exp: 50
+      look_ahead_time: 5
+      patience_counter: 3
+      over_sample_rate: 3
+      num_samples_boundary: 3
+      dtime_max: 3
+
+THP_train_memory_opt:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: THP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 16  # THP uses attention, more memory intensive
+    max_epoch: 30
+    shuffle: True
+    optimizer: adam
+    learning_rate: 1.e-3
+    valid_freq: 2
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+  model_config:
+    hidden_size: 32
+    time_emb_size: 8
+    num_layers: 1  # Single layer
+    num_heads: 2  # Fewer heads
+    mc_num_sample_per_step: 5
+    loss_integral_num_sample_per_step: 5
+    use_ln: False
+    dropout: 0.1
+    thinning:
+      num_seq: 2
+      num_sample: 1
+      num_exp: 30
+      look_ahead_time: 5
+      patience_counter: 3
+      over_sample_rate: 3
+      num_samples_boundary: 3
+      dtime_max: 3
+      num_step_gen: 1

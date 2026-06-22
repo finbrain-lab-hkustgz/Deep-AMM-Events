@@ -1,0 +1,590 @@
+pipeline_config_id: runner_config
+
+data:
+  pendle:
+    data_format: json
+    train_dir:  ./data/pendle/train.json
+    valid_dir:  ./data/pendle/dev.json
+    test_dir:  ./data/pendle/test.json
+    data_specs:
+      num_event_types: 31
+      pad_token_id: 31
+      padding_side: right
+      # Reduce max_len to save memory
+      # truncation_strategy: longest_first
+      # max_len: 256  # Reduced from default
+
+# ============================================
+# NHP Configurations
+# ============================================
+
+# NHP - Standard multi-GPU configuration
+NHP_train_multi_gpu:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: NHP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 16  # Per GPU batch size
+    max_epoch: 100
+    shuffle: False
+    optimizer: adam
+    learning_rate: 1.e-2
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+    gradient_accumulation_steps: 4
+  model_config:
+    hidden_size: 64
+    loss_integral_num_sample_per_step: 20
+    dropout: 0.1
+    model_specs:
+      use_hybrid_loss: false  # Can be overridden by command line
+      init_log_var_nll: 0.0      # Event loss weight (σ1)
+      init_log_var_mse: 0.0  # Non-event loss weight (σ2)
+      bias: true
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 7000
+      num_step_gen: 1
+
+# ============================================
+# ANHN Configurations
+# ============================================
+
+# ANHN - Standard multi-GPU configuration
+ANHN_train_multi_gpu:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: ANHN
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 16  # Per GPU batch size
+    max_epoch: 100
+    shuffle: False
+    optimizer: adam
+    learning_rate: 1.e-2
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+    gradient_accumulation_steps: 4
+  model_config:
+    hidden_size: 8
+    time_emb_size: 4
+    num_layers: 1
+    num_heads: 1
+    loss_integral_num_sample_per_step: 20
+    dropout: 0.1
+    use_ln: True
+    model_specs:
+      use_hybrid_loss: false  # Can be overridden by command line
+      init_log_var_nll: 0.0      # NLL loss weight
+      init_log_var_mse: 0.0      # MSE loss weight
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 7000
+      num_step_gen: 1
+
+# ============================================
+# RMTPP Configurations
+# ============================================
+
+# RMTPP - Standard multi-GPU configuration
+RMTPP_train_multi_gpu:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: RMTPP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 16  # Per GPU batch size
+    max_epoch: 200
+    shuffle: False
+    optimizer: adam
+    learning_rate: 1.e-2
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+    gradient_accumulation_steps: 4
+  model_config:
+    hidden_size: 32
+    time_emb_size: 16
+    num_layers: 2
+    num_heads: 2
+    mc_num_sample_per_step: 20
+    sharing_param_layer: False
+    loss_integral_num_sample_per_step: 20
+    dropout: 0.1
+    use_ln: False
+    model_specs:
+      use_hybrid_loss: false  # Can be overridden by command line
+      init_log_var_nll: 0.0
+      init_log_var_mse: 0.0
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 7000
+
+# ============================================
+# THP Configurations
+# ============================================
+
+# THP - Standard multi-GPU configuration
+THP_train_multi_gpu:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: THP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 16  # Per GPU batch size
+    max_epoch: 100
+    shuffle: False
+    optimizer: adam
+    learning_rate: 1.e-4
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+    gradient_accumulation_steps: 4
+  model_config:
+    hidden_size: 32
+    time_emb_size: 16
+    num_layers: 2
+    num_heads: 2
+    mc_num_sample_per_step: 20
+    loss_integral_num_sample_per_step: 20
+    use_ln: False
+    dropout: 0.0
+    model_specs:
+      use_hybrid_loss: false  # Can be overridden by command line
+      init_log_var_nll: 0.0
+      init_log_var_mse: 0.0
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 7000
+      num_step_gen: 1
+
+# ============================================
+# FullyNN Configurations
+# ============================================
+
+# FullyNN - Standard multi-GPU configuration
+FullyNN_train_multi_gpu:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: FullyNN
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 16  # Per GPU batch size
+    max_epoch: 100
+    shuffle: False
+    optimizer: adam
+    learning_rate: 1.e-3
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+    gradient_accumulation_steps: 4
+  model_config:
+    rnn_type: LSTM
+    hidden_size: 32
+    time_emb_size: 4
+    num_layers: 2
+    num_heads: 2
+    mc_num_sample_per_step: 20
+    sharing_param_layer: False
+    loss_integral_num_sample_per_step: 20
+    dropout: 0.1
+    use_ln: False
+    model_specs:
+      num_mlp_layers: 3
+      proper_marked_intensities: true  # Compute gradients separately for each event type
+      use_hybrid_loss: false  # Can be overridden by command line
+      init_log_var_nll: 0.0
+      init_log_var_mse: 0.0
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 7000
+      num_step_gen: 1
+
+# FullyNN - Evaluation configuration
+FullyNN_eval:
+  base_config:
+    stage: eval
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: FullyNN
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 256
+    resume_checkpoint: True
+    seed: 2019
+    gpu: 0
+  model_config:
+    rnn_type: LSTM
+    hidden_size: 32
+    time_emb_size: 4
+    num_layers: 2
+    num_heads: 2
+    mc_num_sample_per_step: 20
+    sharing_param_layer: False
+    loss_integral_num_sample_per_step: 20
+    dropout: 0.0
+    use_ln: False
+    model_specs:
+      num_mlp_layers: 3
+      proper_marked_intensities: true
+      use_hybrid_loss: false
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 7000
+      num_step_gen: 1
+
+# FullyNN - Generation configuration
+FullyNN_gen:
+  base_config:
+    stage: gen
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: FullyNN
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 1
+    resume_checkpoint: True
+    seed: 2019
+    gpu: 0
+  model_config:
+    rnn_type: LSTM
+    hidden_size: 32
+    time_emb_size: 4
+    num_layers: 2
+    num_heads: 2
+    mc_num_sample_per_step: 20
+    sharing_param_layer: False
+    loss_integral_num_sample_per_step: 20
+    dropout: 0.0
+    use_ln: False
+    model_specs:
+      num_mlp_layers: 3
+      proper_marked_intensities: true
+      use_hybrid_loss: false
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 7000
+      num_step_gen: 5
+
+# ============================================
+# SAHP Configurations
+# ============================================
+
+# SAHP - Standard multi-GPU configuration
+SAHP_train_multi_gpu:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: SAHP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 16  # Per GPU batch size
+    max_epoch: 100
+    shuffle: False
+    optimizer: adam
+    learning_rate: 1.e-2
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+    gradient_accumulation_steps: 4
+  model_config:
+    hidden_size: 32
+    time_emb_size: 16
+    num_layers: 2
+    num_heads: 2
+    loss_integral_num_sample_per_step: 20
+    use_ln: False
+    dropout: 0.1
+    model_specs:
+      use_hybrid_loss: false  # Can be overridden by command line
+      init_log_var_nll: 0.0
+      init_log_var_mse: 0.0
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 7000
+      num_step_gen: 1
+
+# ============================================
+# AttNHP Configurations
+# ============================================
+
+# AttNHP - Standard multi-GPU configuration
+AttNHP_train_multi_gpu:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: AttNHP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 16  # Per GPU batch size
+    max_epoch: 100
+    shuffle: False
+    optimizer: adam
+    learning_rate: 1.e-3
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+    gradient_accumulation_steps: 4
+  model_config:
+    hidden_size: 32
+    time_emb_size: 16
+    num_layers: 1
+    num_heads: 2
+    loss_integral_num_sample_per_step: 20
+    use_ln: False
+    dropout: 0.1
+    model_specs:
+      use_hybrid_loss: false  # Can be overridden by command line
+      init_log_var_nll: 0.0
+      init_log_var_mse: 0.0
+    thinning:
+      num_seq: 2  #2
+      num_sample: 1
+      num_exp: 50
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 120
+      num_step_gen: 1
+
+# ============================================
+# IntensityFree Configurations
+# ============================================
+
+# IntensityFree - Standard multi-GPU configuration
+IntensityFree_train_multi_gpu:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: IntensityFree
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 16  # Per GPU batch size
+    max_epoch: 100
+    shuffle: False
+    optimizer: adam
+    learning_rate: 1.e-3
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+    gradient_accumulation_steps: 4
+  model_config:
+    hidden_size: 32
+    time_emb_size: 16
+    num_layers: 2
+    num_heads: 2
+    mc_num_sample_per_step: 20
+    sharing_param_layer: False
+    loss_integral_num_sample_per_step: 20
+    dropout: 0.1
+    use_ln: False
+    # Normalization parameters for log-normal distribution
+    # These should ideally be computed from the training data
+    # Using reasonable values for the pendle dataset
+    mean_log_inter_time: 5.0  # log(150) ~ 5.0, typical inter-event time
+    std_log_inter_time: 2.0   # Allow for variation
+    model_specs:
+      num_mix_components: 3
+      use_hybrid_loss: false  # Can be overridden by command line
+      init_log_var_nll: 0.0
+      init_log_var_mse: 0.0
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 7000  # Reduced to avoid extreme values
+      num_step_gen: 1
+
+# ============================================
+# ODETPP Configurations
+# ============================================
+
+# ODETPP - Standard multi-GPU configuration
+ODETPP_train_multi_gpu:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: ODETPP
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 4  # Very small batch size for ODE stability
+    max_epoch: 100
+    shuffle: False
+    optimizer: adam
+    learning_rate: 1.e-4  # Much smaller learning rate for ODE stability
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: 0
+    gradient_accumulation_steps: 8  # Compensate for smaller batch size
+    max_grad_norm: 1.0  # Gradient clipping for stability
+  model_config:
+    hidden_size: 32  # Much smaller hidden size for ODE stability
+    time_emb_size: 16  # Smaller embeddings
+    num_layers: 2  # Single layer for stability
+    sharing_param_layer: False
+    loss_integral_num_sample_per_step: 5  # Fewer samples to reduce computation
+    dropout: 0.0
+    use_ln: False
+    model_specs:
+      ode_num_sample_per_step: 2  # Minimal ODE steps
+      time_factor: 0.001  # Scale down times for numerical stability
+      use_hybrid_loss: false  # Can be overridden by command line
+      init_log_var_nll: 0.0
+      init_log_var_mse: 0.0
+    thinning:
+      num_seq: 10  # Minimal sequences
+      num_sample: 1
+      num_exp: 50  # Fewer samples
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 7000  # Much smaller max time for ODE stability
+      num_step_gen: 1
+
+
+S2P2_train_multi_gpu:
+  base_config:
+    stage: train
+    backend: torch
+    dataset_id: pendle
+    runner_id: std_tpp
+    model_id: S2P2
+    base_dir: './checkpoints/'
+  trainer_config:
+    batch_size: 16
+    max_epoch: 100
+    shuffle: False
+    optimizer: adam
+    learning_rate: 1.e-3
+    valid_freq: 1
+    use_tfb: True
+    metrics: [ 'acc', 'rmse' ]
+    seed: 2019
+    gpu: -1  # ID of GPU to use. Set to -1 to use CPU instead. `mps` backend could lead to incorrect results, please use CPU or CUDA.
+  model_config:
+    hidden_size: 32  # Number of dimensions for u_t and y_t, labeled as H in the paper.
+    loss_integral_num_sample_per_step: 10  # How many time points to use to estimate the integrated intensity between each pair of subsequent events for the log-likelihood.
+    use_mc_samples: True  # Use Monte-Carlo sampling for the integral estimation. If False, uses a quadrature with a grid of evenly spaced points.
+    num_layers: 4  # Number of LLH layers.
+    model_specs:
+      P: 16  # Number of dimensions for the hidden state x_t, labeled as P in the paper.
+      dropout_rate: 0.1  # Dropout rate, used immediately after the activation function between layers but before the normalization. Formally, we set u^{(l+1)}_t = LayerNorm(dropout(\sigma(y^{(l)}_t)) + u^{(l)}_t).
+      act_func: gelu  # gelu | half_glu | full_glu  # Activation function to use between layers.
+      for_loop: True  # If enabled, uses for-loop for computing the recurrence in the LLH layers. If disabled, uses a parallel scan.
+      pre_norm: False  # Should be set to False. If True, uses a LayerNorm on the inputs to a LLH layer.
+      post_norm: True  # Should be set to True. If True, uses a LayerNorm on the outputs of a LLH layer (after transforming and adding the residual).
+      int_forward_variant: False  # Should be set to False. If True, uses u_{t_i} as the ZOH constant for u_t with t \in (t_i, t_{i+1}].
+      int_backward_variant: True  # Should be set to True. If True, uses u_{t_{i+1}-} as the ZOH constant for u_t with t \in (t_i, t_{i+1}].
+      relative_time: True  # If True, predicts the scaling factor to be applied to the dynamics between each pair of subsequent events. See Sec. 3.3 of the paper.
+    thinning:
+      num_seq: 10
+      num_sample: 1
+      num_exp: 500
+      look_ahead_time: 10
+      patience_counter: 5
+      over_sample_rate: 5
+      num_samples_boundary: 5
+      dtime_max: 7000
+      num_step_gen: 5
+
+

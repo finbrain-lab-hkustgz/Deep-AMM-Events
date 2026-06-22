@@ -1,0 +1,70 @@
+{
+  "0": [
+    "burn"
+  ],
+  "1": [
+    "mint"
+  ],
+  "2": [
+    "Swap-PT-In"
+  ],
+  "3": [
+    "Swap-PT-Out"
+  ],
+  "4": [
+    "burn",
+    "mint"
+  ],
+  "5": [
+    "Swap-PT-In",
+    "burn"
+  ],
+  "6": [
+    "Swap-PT-Out",
+    "burn"
+  ],
+  "7": [
+    "Swap-PT-In",
+    "mint"
+  ],
+  "8": [
+    "Swap-PT-Out",
+    "mint"
+  ],
+  "9": [
+    "Swap-PT-In",
+    "Swap-PT-Out"
+  ],
+  "10": [
+    "Swap-PT-In",
+    "burn",
+    "mint"
+  ],
+  "11": [
+    "Swap-PT-Out",
+    "burn",
+    "mint"
+  ],
+  "12": [
+    "Swap-PT-In",
+    "Swap-PT-Out",
+    "burn"
+  ],
+  "13": [
+    "Swap-PT-In",
+    "Swap-PT-Out",
+    "mint"
+  ],
+  "14": [
+    "Swap-PT-In",
+    "Swap-PT-Out",
+    "burn",
+    "mint"
+  ],
+  "15": [
+    "Swap-PT-In",
+    "Swap-PT-Out",
+    "burn",
+    "mint"
+  ]
+}

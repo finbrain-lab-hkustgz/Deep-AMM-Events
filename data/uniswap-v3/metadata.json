@@ -1,0 +1,112 @@
+{
+  "dim_process": 31,
+  "threshold": 300,
+  "total_sequences": 10596,
+  "original_assets": 5,
+  "train_size": 7417,
+  "dev_size": 1589,
+  "test_size": 1590,
+  "event_combinations": 15,
+  "event_type_distribution": {
+    "2": 1367336,
+    "9": 474654,
+    "3": 1121387,
+    "0": 59456,
+    "8": 7471,
+    "1": 48907,
+    "10": 23196,
+    "6": 8810,
+    "11": 16410,
+    "5": 11388,
+    "15": 16474,
+    "7": 9548,
+    "4": 2224,
+    "13": 4887,
+    "12": 6084
+  },
+  "combination_meanings": {
+    "0": [
+      "burn"
+    ],
+    "1": [
+      "mint"
+    ],
+    "2": [
+      "Swap-PT-In"
+    ],
+    "3": [
+      "Swap-PT-Out"
+    ],
+    "4": [
+      "burn",
+      "mint"
+    ],
+    "5": [
+      "Swap-PT-In",
+      "burn"
+    ],
+    "6": [
+      "Swap-PT-Out",
+      "burn"
+    ],
+    "7": [
+      "Swap-PT-In",
+      "mint"
+    ],
+    "8": [
+      "Swap-PT-Out",
+      "mint"
+    ],
+    "9": [
+      "Swap-PT-In",
+      "Swap-PT-Out"
+    ],
+    "10": [
+      "Swap-PT-In",
+      "burn",
+      "mint"
+    ],
+    "11": [
+      "Swap-PT-Out",
+      "burn",
+      "mint"
+    ],
+    "12": [
+      "Swap-PT-In",
+      "Swap-PT-Out",
+      "burn"
+    ],
+    "13": [
+      "Swap-PT-In",
+      "Swap-PT-Out",
+      "mint"
+    ],
+    "14": [
+      "Swap-PT-In",
+      "Swap-PT-Out",
+      "burn",
+      "mint"
+    ],
+    "15": [
+      "Swap-PT-In",
+      "Swap-PT-Out",
+      "burn",
+      "mint"
+    ]
+  },
+  "sequence_length_stats": {
+    "mean": 299.94639486598714,
+    "median": 300.0,
+    "std": 2.7007813188669263,
+    "min": 107,
+    "max": 300,
+    "percentiles": {
+      "25": 300.0,
+      "50": 300.0,
+      "75": 300.0,
+      "90": 300.0,
+      "95": 300.0,
+      "99": 300.0
+    }
+  }
+}
